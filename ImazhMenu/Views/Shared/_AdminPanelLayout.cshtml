@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <script src="~/jquery.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="~/assets/DataTables/datatables.css">
+    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+
+    <!-- Vendor CSS Files -->
+    <title>پنل ادمین ایماژ</title>
+    <link rel="stylesheet" href="~/css/AdminPanel.css">
+    <link href="~/lib/rtlbootstrap/bootstrap.rtl.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="row">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" style="background-color:#ccccb3!important;flex-grow:1;">
+            <div style="position:fixed;">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                    <span class="fs-4">پنل مدیریت ایماژ</span>
+                </a>
+                <hr>
+
+                <ul class="nav nav-pills flex-column mb-auto" id="navlinks">
+                    <li class="nav-item">
+                        <a onclick="NavigateToCreateCategory()" id="nav-linkCategory" class="nav-link link-dark" aria-current="page">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                            دسته بندی
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="NavigateToCreateSubCategory()" id="nav-linkSubCategory" class="nav-link link-dark" aria-current="page">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                            محصولات دسته بندی
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="NavigateToGallery()" id="nav-linkGallery" class="nav-link link-dark" aria-current="page">
+                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                            گالری
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @RenderBody()
+    </div>
+
+    <!-- Vendor JS Files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/assets/DataTables/datatables.js"></script>
+    <script src="~/lib/rtlbootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/AdminPanel.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("NToastNotify")
+</body>
+
+</html>

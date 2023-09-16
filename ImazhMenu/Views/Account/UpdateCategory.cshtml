@@ -1,0 +1,25 @@
+﻿@model Category
+@{
+    Layout = "_AdminPanelLayout";
+}
+<div class="col-9">
+    <div class="m-5">
+        <h4>ویرایش دسته بندی</h4>
+        <div class="card mb-5">
+            <div class="card-body">
+                <form method="post" asp-action="UpdateCategory">
+                    <div class="input-group mb-3">
+                        <div class="row align-items-center mx-2">
+                            <label> دسته بندی</label>
+                        </div>
+                        <div class="row">
+                            <input asp-for="Id" hidden>
+                            <input asp-for="CactegoryName" type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mx-3">ثبت</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

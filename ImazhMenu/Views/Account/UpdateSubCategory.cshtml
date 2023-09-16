@@ -1,0 +1,44 @@
+﻿@model Subcategory
+@{
+    Layout = "_AdminPanelLayout";
+}
+
+<div class="col-9" id="SubCategorySection">
+    <div class="m-5">
+        <h4>ویرایش محصول</h4>
+        <div class="card">
+            <div class="card-body">
+                <form asp-controller="Account" asp-action="UpdateSubCategory" enctype="multipart/form-data">
+                    <input asp-for="Id" hidden />
+                    <input asp-for="CategoryRef" hidden />
+                    <div class="row mb-3">
+                        <div class="form-group col-6 mb-3">
+                            <label for="exampleFormControlTextarea1" class="mb-3">محصول</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" asp-for="SubCactegoryName" placeholder="نام محصول را وارد کنید">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6 mb-3">
+                            <label for="exampleFormControlTextarea1" class="mb-3">قیمت محصول</label>
+                            <input type="text" class="form-control" id="exampleFormControlInput1" asp-for="Price" placeholder="قیمت محصول را به تومان وارد کنید">
+                        </div>
+                        <div class="form-group col-6 mb-3 d-flex align-items-center mt-5">
+                            <label for="exampleFormControlFile1">تصویر محصول</label>
+                            <input type="file" class="form-control-file px-3" name="file" value="@Model.SubCatImgUrl" asp-for="SubCatImgUrl" id="exampleFormControlFile1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-6 mb-3">
+                            <label for="exampleFormControlTextarea1" class="mb-3">توضیحات محصول</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" asp-for="Description" placeholder="توضیحات محصول را وارد کنید" style="height:150px;resize:none"></textarea>
+                        </div> 
+                        <div class="form-group col-6 mb-3 text-center">
+                            <img src="/@Model.SubCatImgUrl" height="250px" width="250px" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mx-3">ثبت</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

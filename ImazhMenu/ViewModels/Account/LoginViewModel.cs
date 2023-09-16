@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MVCTest.ViewModels.Account
+namespace ImazhMenu.ViewModels.Account
 {
     public class LoginViewModel
     {

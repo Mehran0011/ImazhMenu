@@ -5,11 +5,10 @@ namespace ImazhMenu.Repository.IRepository
 {
     public interface ICategoryRepository
     {
-        IEnumerable<Category> GetAllCategories();
+        IQueryable<Category> GetAllCategories();
         void AddCategory(Category category);
         void UpdateCategory(Category category);
         void DeleteCategory(Category category);
-        void Save();
 
     }
 }

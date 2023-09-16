@@ -1,0 +1,28 @@
+﻿@model Gallery
+@{
+    Layout = "_AdminPanelLayout";
+}
+
+<div class="col-9">
+    <div class="m-5">
+        <h4>ویرایش تصویر گالری</h4>
+        <div class="card">
+            <div class="card-body">
+                <form asp-controller="Account" asp-action="UpdateGalleryPicture" enctype="multipart/form-data">
+                    <input asp-for="Id" hidden />
+                    <input asp-for="ImgUrl" name="oldimageurl" hidden />
+                    <div class="row">
+                        <div class="form-group col-6 mb-3 d-flex align-items-center mt-5">
+                            <label for="exampleFormControlFile1">تصویر گالری</label>
+                            <input type="file" class="form-control-file px-3" name="file" id="exampleFormControlFile1">
+                        </div>
+                        <div class="form-group col-6 mb-3 text-center">
+                            <img src="/@Model.ImgUrl" height="250px" width="250px" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mx-3">ثبت</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

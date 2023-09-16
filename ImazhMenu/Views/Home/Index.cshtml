@@ -1,8 +1,134 @@
-﻿@*@{
+﻿@model AdminPanelViewModel;
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>*@
+<!-- ======= Menu Section ======= -->
+<section id="menu" class="menu" style="direction:rtl">
+    <div class="container">
+
+        <div class="section-title">
+            <h2>منوی <span>ایماژ</span></h2>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 d-flex justify-content-center mb-3">
+                <ul id="menu-flters">
+                    <li class="categoryItem filter-active" id="allCategory" data-value="-1" onclick="GetProductsByCategoryId(-1)" data-filter=".filter-starters">همه</li>
+                    @foreach (var item in Model.Categories)
+                    {
+
+                        <li class="categoryItem" data-value="@item.Id" onclick="GetProductsByCategoryId(@item.Id)" data-filter=".filter-starters">@item.CactegoryName</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row menu-container" id="MenuSection">
+   
+        </div>
+
+    </div>
+</section><!-- End Menu Section -->
+<!-- ======= Gallery Section ======= -->
+<section id="gallery" class="gallery">
+    <div class="container-fluid">
+
+        <div class="section-title">
+            <h2>گالری <span>ایماژ</span></h2>
+            <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p>
+        </div>
+
+        <div class="row g-0">
+            @foreach (var item in Model.Gallery)
+            {
+                <div class="col-lg-3 col-md-4">
+                    <div class="gallery-item">
+                        <a href="@item.ImgUrl" class="gallery-lightbox">
+                            <img src="@item.ImgUrl" alt="" class="img-fluid" >
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</section><!-- End Gallery Section -->
+<!-- ======= Contact Section ======= -->
+<section id="contact" class="contact" style="direction:rtl">
+    <div class="container">
+
+        <div class="section-title">
+            <h2><span>Contact</span> Us</h2>
+            <p>Ut possimus qui ut temporibus culpa velit eveniet modi omnis est adipisci expedita at voluptas atque vitae autem.</p>
+        </div>
+    </div>
+    <div class="map">
+        <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1112.1710889004964!2d50.931934234813625!3d35.75398149657945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8d953b6e79862d%3A0xa999e03d97ada7c1!2z2qnYp9mB2Ycg2KfbjNmF2KfamA!5e0!3m2!1sen!2s!4v1691682925957!5m2!1sen!2s" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div class="container mt-5">
+
+        <div class="info-wrap">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 info d-flex gap-4">
+                    <i class="bi bi-geo-alt"></i>
+                    <div>
+                        <h4>آدرس:</h4>
+                        <p>A108 Adam Street<br>New York, NY 535022</p>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 info mt-4 mt-lg-0  d-flex gap-4">
+                    <i class="bi bi-clock"></i>
+                    <div>
+                        <h4>ساعت کاری:</h4>
+                        <p>شنبه-جمعه:<br> AM 09:00 - PM 12:00</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 info mt-4 mt-lg-0  d-flex gap-4">
+                    <i class="bi bi-envelope"></i>
+                    <div>
+                        <h4>ایمیل:</h4>
+                        <p>info@example.com<br>contact@example.com</p>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 info mt-4 mt-lg-0  d-flex gap-4">
+                    <i class="bi bi-phone"></i>
+                    <div>
+                        <h4>تماس:</h4>
+                        <p>026-36272604</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="نام" required>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                    <input type="tel" class="form-control" name="phonenumber" id="phonenumber" placeholder="شماره تلفن" required>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="موضوع" required>
+            </div>
+            <div class="form-group mt-3">
+                <textarea class="form-control" name="message" rows="5" placeholder="پیام شما..." required></textarea>
+            </div>
+            <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+            </div>
+            <div class="text-center"><button type="submit">ارسال</button></div>
+        </form>
+
+    </div>
+</section><!-- End Contact Section -->

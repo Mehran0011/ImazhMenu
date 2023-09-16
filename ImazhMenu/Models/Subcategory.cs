@@ -1,4 +1,6 @@
-﻿namespace ImazhMenu.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ImazhMenu.Models
 {
     public class Subcategory
     {
@@ -8,6 +10,7 @@
         public string SubCatImgUrl { get; set; }
         public int Price { get; set; }
         public int CategoryRef { get; set; }
+        [ForeignKey("CategoryRef")]
         public Category Category { get; set; }
     }
 }

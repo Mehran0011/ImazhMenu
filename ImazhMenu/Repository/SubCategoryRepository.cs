@@ -25,14 +25,9 @@ namespace ImazhMenu.Repository
 			_db.Remove(subcategory);
 		}
 
-		public IEnumerable<Subcategory> GetAllSubCategories()
+		public IQueryable<Subcategory> GetAllSubCategories()
 		{
-			return _db.Subcategories.ToList();
-		}
-
-        public void Save()
-		{
-			_db.SaveChanges();
+			return _db.Subcategories.AsQueryable();
 		}
 
 		public void UpdateSubCategory(Subcategory subcategory)
