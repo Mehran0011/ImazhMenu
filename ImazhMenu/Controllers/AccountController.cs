@@ -2,6 +2,7 @@
 using ImazhMenu.Repository.IRepository;
 using ImazhMenu.ViewModels;
 using ImazhMenu.ViewModels.Account;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -34,12 +35,13 @@ namespace ImazhMenu.Controllers
 
         }
 
-
-        public IActionResult Register()
+        [Authorize]
+        public IActionResult AdminPanel()
         {
             return View();
         }
-        public IActionResult AdminPanel()
+
+        public IActionResult Register()
         {
             return View();
         }
@@ -59,7 +61,8 @@ namespace ImazhMenu.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    await _signInManager.SignInAsync(user, isPersistent: true);
+                    return RedirectToAction("AdminPanel", "Account");
                 }
 
                 foreach (var error in result.Errors)
@@ -83,7 +86,7 @@ namespace ImazhMenu.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (_signInManager.IsSignedIn(User))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("AdminPanel", "Account");
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(
@@ -91,7 +94,7 @@ namespace ImazhMenu.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("AdminPanel", "Account");
                 }
 
                 if (result.IsLockedOut)
@@ -112,6 +115,7 @@ namespace ImazhMenu.Controllers
             return RedirectToAction("Index", "Home");
         }
         //=====================================================================================
+        [Authorize]
         [HttpPost]
         public virtual async Task<JsonResult> GetAllCategories()
         {
@@ -177,12 +181,12 @@ namespace ImazhMenu.Controllers
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = _result });
 
         }
-
+        [Authorize]
         public IActionResult CreateNewCategory()
         {
             return View();
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult CreateNewCategory(Category category)
         {
@@ -198,13 +202,13 @@ namespace ImazhMenu.Controllers
             }
             return View(category);
         }
-
+        [Authorize]
         public IActionResult UpdateCategory(int id)
         {
             var obj = _unitOfWork.Category.GetAllCategories().Where(u => u.Id == id).FirstOrDefault();
             return View(obj);
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult UpdateCategory(Category category)
         {
@@ -220,6 +224,7 @@ namespace ImazhMenu.Controllers
             }
             return RedirectToAction("CreateNewCategory");
         }
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteCategory(int? id)
         {
@@ -238,6 +243,7 @@ namespace ImazhMenu.Controllers
             return Json(new { success = true, message = "Deleted Successfully!" });
         }
         //=====================================================================================
+        [Authorize]
         [HttpPost]
         public virtual async Task<JsonResult> GetAllSubCategories()
         {
@@ -306,7 +312,7 @@ namespace ImazhMenu.Controllers
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = _result });
 
         }
-
+        [Authorize]
         public IActionResult CreateNewSubCategory()
         {
             var Categories = _unitOfWork.Category.GetAllCategories();
@@ -316,7 +322,7 @@ namespace ImazhMenu.Controllers
             };
             return View(model);
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult CreateNewSubCategory(AdminPanelViewModel model, int categoryId, IFormFile? file)
         {
@@ -380,13 +386,13 @@ namespace ImazhMenu.Controllers
             }
             return View(catmodel);
         }
-
+        [Authorize]
         public IActionResult UpdateSubCategory(int id)
         {
             var obj = _unitOfWork.SubCategory.GetAllSubCategories().Where(u => u.Id == id).FirstOrDefault();
             return View(obj);
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult UpdateSubCategory(Subcategory Subcategory, IFormFile? file)
         {
@@ -437,6 +443,7 @@ namespace ImazhMenu.Controllers
             return RedirectToAction("CreateNewSubCategory");
 
         }
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteSubCategory(int? id)
         {
@@ -455,6 +462,7 @@ namespace ImazhMenu.Controllers
             return Json(new { success = true, message = "Deleted Successfully!" });
         }
         //=====================================================================================
+        [Authorize]
         [HttpPost]
         public virtual async Task<JsonResult> GetAllGalleryPictures()
         {
@@ -518,12 +526,12 @@ namespace ImazhMenu.Controllers
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = _result });
 
         }
-
+        [Authorize]
         public IActionResult Gallery()
         {
             return View();
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult Gallery(IEnumerable<IFormFile>? file)
         {
@@ -580,16 +588,15 @@ namespace ImazhMenu.Controllers
                 return View(_gallery);
             }
         }
-
-
+        [Authorize]
         public IActionResult UpdateGalleryPicture(int id)
         {
             var obj = _unitOfWork.Gallery.GetAllGalleryPictures().Where(u => u.Id == id).FirstOrDefault();
             return View(obj);
         }
-
+        [Authorize]
         [HttpPost]
-        public IActionResult UpdateGalleryPicture(Gallery _gallery,string oldimageurl, IFormFile? file)
+        public IActionResult UpdateGalleryPicture(Gallery _gallery, string oldimageurl, IFormFile? file)
         {
             string wwwRootPath = _hostEnvironment.WebRootPath;
             if (file != null)
@@ -602,7 +609,7 @@ namespace ImazhMenu.Controllers
 
                     if (file != null)
                     {
-                        var oldImage = Path.Combine(wwwRootPath, oldimageurl.Replace('/','\\'));
+                        var oldImage = Path.Combine(wwwRootPath, oldimageurl.Replace('/', '\\'));
                         if (System.IO.File.Exists(oldImage))
                         {
                             System.IO.File.Delete(oldImage);
@@ -638,7 +645,7 @@ namespace ImazhMenu.Controllers
                 return RedirectToAction("Gallery");
             }
         }
-
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteGalleryPicture(int? id)
         {
@@ -652,6 +659,97 @@ namespace ImazhMenu.Controllers
                 _unitOfWork.Gallery.DeleteGalleryPicture(obj);
                 _unitOfWork.Save();
                 _toastNotification.AddSuccessToastMessage("تصویر گالری با موفقیت حذف شد");
+            }
+
+            return Json(new { success = true, message = "Deleted Successfully!" });
+        }
+        //=====================================================================================
+        [Authorize]
+        public IActionResult CustomerClubInfo()
+        {
+            return View();
+        }
+        [Authorize]
+        [HttpPost]
+        public virtual async Task<JsonResult> AllCustomerClubInfo()
+        {
+
+            var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+
+            // Skip number of Rows count  
+            var start = Request.Form["start"].FirstOrDefault();
+
+            // Paging Length 10,20  
+            var length = Request.Form["length"].FirstOrDefault();
+
+            // Sort Column Name  
+            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+
+            // Sort Column Direction (asc, desc)  
+            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+
+            // Search Value from (Search box)  
+            var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+            //Paging Size (10, 20, 50,100)  
+            int pageSize = length != null ? Convert.ToInt32(length) : 0;
+
+            int skip = start != null ? Convert.ToInt32(start) : 0;
+
+            int recordsTotal = 0;
+
+
+            IQueryable<CustomerClub> _result = _unitOfWork.CustomerClub.GetAllCustomerClubInfos();
+            if (_result != null)
+            {
+                if (!string.IsNullOrEmpty(searchValue) && !string.IsNullOrWhiteSpace(searchValue))
+                {
+
+                }
+
+
+                var _resultfinal = _result
+                        .Select(x => new
+                        {
+                            id = x.Id,
+                            cutomreName = x.CustomerName,
+                            subject = x.Subject,
+                            message = x.MessageDesc,
+                            phoneNumber = x.PhoneNumber
+                        });
+
+                //Sorting  datatable
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
+                {
+                    //_resultfinal = _resultfinal.OrderBy(sortColumn + " " + sortColumnDirection);
+                }
+                //total number of rows counts   
+                recordsTotal = _resultfinal.Count();
+                //Paging   
+                var data = _resultfinal.OrderByDescending(x => x.id).Skip(skip).Take(pageSize).ToList();
+
+                //Returning Json Data  
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+
+            }
+            else
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = _result });
+
+        }
+        [Authorize]
+        [HttpDelete]
+        public IActionResult DeleteCustomerClub(int? id)
+        {
+            var obj = _unitOfWork.CustomerClub.GetAllCustomerClubInfos().Where(u => u.Id == id).FirstOrDefault();
+            if (obj == null)
+            {
+                NotFound();
+            }
+            else
+            {
+                _unitOfWork.CustomerClub.DeleteCustomerClubInfo(obj);
+                _unitOfWork.Save();
+                _toastNotification.AddSuccessToastMessage("پیام با موفقیت حذف شد");
             }
 
             return Json(new { success = true, message = "Deleted Successfully!" });

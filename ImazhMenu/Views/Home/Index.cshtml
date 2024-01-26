@@ -4,7 +4,7 @@
 }
 
 <!-- ======= Menu Section ======= -->
-<section id="menu" class="menu" style="direction:rtl">
+<section id="menu" class="menu pb-3" style="direction:rtl">
     <div class="container">
 
         <div class="section-title">
@@ -24,14 +24,14 @@
             </div>
         </div>
 
-        <div class="row menu-container" id="MenuSection">
-   
+        <div class="row menu-container" id="MenuSection" >
+
         </div>
 
     </div>
 </section><!-- End Menu Section -->
 <!-- ======= Gallery Section ======= -->
-<section id="gallery" class="gallery">
+<section id="gallery" class="gallery pt-3">
     <div class="container-fluid">
 
         <div class="section-title">
@@ -45,7 +45,7 @@
                 <div class="col-lg-3 col-md-4">
                     <div class="gallery-item">
                         <a href="@item.ImgUrl" class="gallery-lightbox">
-                            <img src="@item.ImgUrl" alt="" class="img-fluid" >
+                            <img src="@item.ImgUrl" alt="" class="img-fluid">
                         </a>
                     </div>
                 </div>
@@ -107,7 +107,7 @@
             </div>
         </div>
 
-        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+        <form asp-action="AddCustomerClubInfo" asp-controller="Home" method="post" class="php-email-form">
             <div class="row">
                 <div class="col-md-6 form-group">
                     <input type="text" name="name" class="form-control" id="name" placeholder="نام" required>
@@ -121,11 +121,6 @@
             </div>
             <div class="form-group mt-3">
                 <textarea class="form-control" name="message" rows="5" placeholder="پیام شما..." required></textarea>
-            </div>
-            <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your message has been sent. Thank you!</div>
             </div>
             <div class="text-center"><button type="submit">ارسال</button></div>
         </form>

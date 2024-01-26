@@ -13,11 +13,14 @@ namespace ImazhMenu.Repository
             Category = new CategoryRepository(_db);
             SubCategory = new SubCategoryRepository(_db);
             Gallery = new GalleryRepository(_db);
+            CustomerClub = new CustomerClubRepository(_db);
 
         }
         public ICategoryRepository Category { get; private set; }
         public ISubCategoryRepository SubCategory { get; private set; }
         public IGalleryRepository Gallery { get; private set; }
+        public ICustomerClubRepository CustomerClub { get; private set; }
+
 
 
         public void Save()

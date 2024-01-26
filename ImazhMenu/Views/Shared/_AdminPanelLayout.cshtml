@@ -22,46 +22,77 @@
 </head>
 
 <body>
-    <div class="row">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" style="background-color:#ccccb3!important;flex-grow:1;">
-            <div style="position:fixed;">
-                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-                    <span class="fs-4">پنل مدیریت ایماژ</span>
-                </a>
-                <hr>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <a class="navbar-brand px-3 text-light" href="/Account/AdminPanel">پنل ادمین ایماژ</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                <ul class="nav nav-pills flex-column mb-auto" id="navlinks">
-                    <li class="nav-item">
-                        <a onclick="NavigateToCreateCategory()" id="nav-linkCategory" class="nav-link link-dark" aria-current="page">
-                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                            دسته بندی
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a onclick="NavigateToCreateSubCategory()" id="nav-linkSubCategory" class="nav-link link-dark" aria-current="page">
-                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                            محصولات دسته بندی
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a onclick="NavigateToGallery()" id="nav-linkGallery" class="nav-link link-dark" aria-current="page">
-                            <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
-                            گالری
-                        </a>
-                    </li>
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse px-3 " id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link text-light" href="/Account/CreateNewCategory">دسته بندی</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/Account/CreateNewSubCategory">محصولات دسته بندی</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/Account/Gallery">گالری</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/Account/CustomerClubInfo">باشگاه مشتریان</a>
+                </li>
+            </ul>
+
         </div>
-        @RenderBody()
-    </div>
+    </nav>
+    @*    <div class="row">
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-light col-3" style="background-color:#ccccb3!important;flex-grow:1;">
+    <div style="position:fixed;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+    <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+    <span class="fs-4">پنل مدیریت ایماژ</span>
+    </a>
+    <hr>
 
+    <ul class="nav nav-pills flex-column mb-auto" id="navlinks">
+    <li class="nav-item">
+    <a onclick="NavigateToCreateCategory()" id="nav-linkCategory" class="nav-link link-dark" aria-current="page">
+    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+    دسته بندی
+    </a>
+    </li>
+    <li class="nav-item">
+    <a onclick="NavigateToCreateSubCategory()" id="nav-linkSubCategory" class="nav-link link-dark" aria-current="page">
+    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+    محصولات دسته بندی
+    </a>
+    </li>
+    <li class="nav-item">
+    <a onclick="NavigateToGallery()" id="nav-linkGallery" class="nav-link link-dark" aria-current="page">
+    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+    گالری
+    </a>
+    </li>
+    <li class="nav-item">
+    <a onclick="NavigateToCustomerClub()" id="nav-linkGallery" class="nav-link link-dark" aria-current="page">
+    <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+    باشگاه مشتریان
+    </a>
+    </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    *@
+    @RenderBody()
     <!-- Vendor JS Files -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/assets/DataTables/datatables.js"></script>
-    <script src="~/lib/rtlbootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/AdminPanel.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("NToastNotify")

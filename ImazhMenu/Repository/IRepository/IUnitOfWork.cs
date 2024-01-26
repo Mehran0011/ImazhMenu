@@ -5,6 +5,7 @@
         ICategoryRepository Category { get; }
         ISubCategoryRepository SubCategory { get; }
         IGalleryRepository Gallery { get; }
+        ICustomerClubRepository CustomerClub { get; }
 
         void Save();
 

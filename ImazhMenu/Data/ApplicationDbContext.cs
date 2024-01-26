@@ -16,5 +16,7 @@ namespace ImazhMenu.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
         public DbSet<Gallery> Galleries { get; set; }
+        public DbSet<CustomerClub> CustomerClubs { get; set; }
+
     }
 }

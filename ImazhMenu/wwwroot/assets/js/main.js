@@ -183,10 +183,6 @@ function separate(Number) {
     window.addEventListener('load', () => {
         let menuContainer = select('.menu-container');
         if (menuContainer) {
-            let menuIsotope = new Isotope(menuContainer, {
-                itemSelector: '.menu-item',
-                layoutMode: 'fitRows'
-            });
 
             let menuFilters = select('#menu-flters li', true);
 
@@ -196,10 +192,6 @@ function separate(Number) {
                     el.classList.remove('filter-active');
                 });
                 this.classList.add('filter-active');
-
-                menuIsotope.arrange({
-                    filter: this.getAttribute('data-filter')
-                });
 
             }, true);
         }
@@ -263,20 +255,41 @@ function GetProductsByCategoryId(catId) {
         var _html = "";
         var allhtml = "";
         for (var i = 0; i < response.subCategories.length; i++) {
-            _html = `<div class="col-lg-6 menu-item filter-starters">\
-                     <div class="row" style="margin-bottom:-30px;">\
-                <img src="${response.subCategories[i].subCatImgUrl}" class="col-2" width="75px" height="75px" style="border-radius:50%;" />
-                <span class="col-2" style="margin-top:10px;color:#ffb03b;">${response.subCategories[i].subCactegoryName}</span>
-                <p style="margin-bottom:0!important;margin-top:10px;" class="col-5">....................................................</p>
-                <span class="col-3" style="margin-top:10px;">${separate(response.subCategories[i].price)} تومان</span>
-             </div>
-            <p style="padding-right:100px;margin-bottom:30px;">
-            ${response.subCategories[i].description}
-            </p>
-         </div >`;
+            _html = `<div class="col-lg-6 menu-item filter-starters">` +
+                `<div class="row" style="margin-bottom:-30px;">` +
+                `<img src="${response.subCategories[i].subCatImgUrl}" class="col-2 myImg" width="75px" height="75px" style="border-radius:50%;" />` +
+                `<span class="col-3 col-lg-2 col-md-3 col-sm-3" style="margin-top:10px;color:#ffb03b;">${response.subCategories[i].subCactegoryName}</span>` +
+                `<div style="border-top: 1px dotted #000!important;margin-top: 21px;" class="col-4 col-lg-5 col-md-4 col-sm-4 "></div>` +
+                `<div class="col-3 col-md-3 d-flex justify-content-around" style="margin-top:10px;"><span>${separate(response.subCategories[i].price)}</span><span>تومان</span></div>` +
+                `</div>` +
+                `<p style="padding-right:100px;margin-bottom:30px;">${response.subCategories[i].description}</p>` +
+                `</div >`;
             allhtml += _html;
         }
+
+        var _modal = `<div id="myModal" class="modal">` +
+            `<span class="close">&times;</span>` +
+            `<img class="modal-content" id="img01">` +
+            `</div>`;
+
         $("#MenuSection").html(allhtml);
+        $("#MenuSection").append(_modal);
 
     });
 }
+//=================================================================
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var modalImg = document.getElementById("img01");
+$(".myImg").on('click', function () {
+    $("#myModal").css("display","block") 
+    $(".myImg").attr("src", this.src);
+});
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+$(".close[0]").on('click', function () {
+    modal.style.display = "none";
+});

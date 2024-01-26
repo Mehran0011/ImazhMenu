@@ -108,3 +108,9 @@ main {
 #navlinks li {
     cursor:pointer;
 }
+
+
+.navbar-item:hover{
+    background-color:white;
+    color:black;
+}
