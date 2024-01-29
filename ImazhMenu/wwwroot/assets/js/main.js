@@ -257,10 +257,11 @@ function GetProductsByCategoryId(catId) {
         for (var i = 0; i < response.subCategories.length; i++) {
             _html = `<div class="col-lg-6 menu-item filter-starters">` +
                 `<div class="row" style="margin-bottom:-30px;">` +
-                `<img src="${response.subCategories[i].subCatImgUrl}" class="col-2 myImg" width="75px" height="75px" style="border-radius:50%;" />` +
-                `<span class="col-3 col-lg-2 col-md-3 col-sm-3" style="margin-top:10px;color:#ffb03b;">${response.subCategories[i].subCactegoryName}</span>` +
+                
+                `<div class="col-2"><img src="${response.subCategories[i].subCatImgUrl}" class="myImg" width="75px" height="75px" style="border-radius:50%;" /></div>` +
+                `<div class="col-3 col-lg-2 col-md-3 col-sm-3"><span style="margin-top:10px;color:#ffb03b;padding:15px;">${response.subCategories[i].subCactegoryName}</span></div>` +
                 `<div style="border-top: 1px dotted #000!important;margin-top: 21px;" class="col-4 col-lg-5 col-md-4 col-sm-4 "></div>` +
-                `<div class="col-3 col-md-3 d-flex justify-content-around" style="margin-top:10px;"><span>${separate(response.subCategories[i].price)}</span><span>تومان</span></div>` +
+                `<div class="col-3 col-md-3 d-flex justify-content-around text-center" style="margin-top:10px;"><span>${separate(response.subCategories[i].price)} تومان</span></div>` +
                 `</div>` +
                 `<p style="padding-right:100px;margin-bottom:30px;">${response.subCategories[i].description}</p>` +
                 `</div >`;
