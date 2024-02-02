@@ -335,12 +335,17 @@ namespace ImazhMenu.Controllers
             Category Category = _unitOfWork.Category.GetAllCategories().Where(x => x.Id == categoryId).FirstOrDefault();
             model.CategoryRef = categoryId;
             model.Categories = Categories;
+            if (Category == null)
+            {
+                _toastNotification.AddErrorToastMessage("دسته بندی را انتخاب کنید !");
+                return View(model);
+            }
             Subcategory _subcat = new Subcategory()
             {
                 SubCactegoryName = model.SubCactegoryName,
                 CategoryRef = model.CategoryRef,
                 Category = Category,
-                Description = model.Description,
+                Description = model.Description == null ? "" : model.Description,
                 Price = model.Price
             };
             if (model.SubCactegoryName != "" && model.CategoryRef != -1 && model.Price != 0)
@@ -352,36 +357,35 @@ namespace ImazhMenu.Controllers
                     var uploads = Path.Combine(wwwRootPath, @"Images\Products");
                     string extension = Path.GetExtension(file.FileName);
 
-                    if (file != null)
+
+                    var oldImage = Path.Combine(uploads, fileName);
+                    if (System.IO.File.Exists(oldImage))
                     {
-                        var oldImage = Path.Combine(uploads, fileName);
-                        if (System.IO.File.Exists(oldImage))
+                        System.IO.File.Delete(oldImage);
+                        using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
                         {
-                            System.IO.File.Delete(oldImage);
-                            using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
-                            {
-                                file.CopyTo(fileStreams);
-                            }
-                            _subcat.SubCatImgUrl = @"Images/Products/" + fileName;
+                            file.CopyTo(fileStreams);
                         }
-                        else
-                        {
-                            using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
-                            {
-                                file.CopyTo(fileStreams);
-                            }
-                            _subcat.SubCatImgUrl = @"Images/Products/" + fileName;
-                        }
+                        _subcat.SubCatImgUrl = @"Images/Products/" + fileName;
                     }
+                    else
+                    {
+                        using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStreams);
+                        }
+                        _subcat.SubCatImgUrl = @"Images/Products/" + fileName;
+                    }
+
+
+                }
+                else
+                {
+                    _subcat.SubCatImgUrl = "";
                     _unitOfWork.SubCategory.AddSubCategory(_subcat);
                     _unitOfWork.Save();
                     _toastNotification.AddSuccessToastMessage("محصول با موفقیت افزوده شد");
                     return View(model);
-                }
-                else
-                {
-                    _toastNotification.AddWarningToastMessage("در ثبت محصول مشکلی پیش آمده است");
-                    return View(catmodel);
                 }
             }
             return View(catmodel);

@@ -872,6 +872,8 @@ section {
     list-style: none;
     text-align: center;
     border-radius: 50px;
+    overflow: auto;
+    white-space: nowrap;
 }
 
     .menu #menu-flters li {

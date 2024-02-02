@@ -43,22 +43,46 @@ namespace ImazhMenu.Controllers
             var CatId = Request.Form["CategoryId"].FirstOrDefault();
             if (CatId != "-1")
             {
-                var products = _unitOfWork.SubCategory.GetAllSubCategories().Where(x => x.CategoryRef == Convert.ToInt32(CatId));
-                AdminPanelViewModel model = new AdminPanelViewModel()
-                {
-                    SubCategories = products,
-                };
-                //if (model.Description = model.Description ? null) ;
-                return Json(model);
+                var categories = _unitOfWork.Category.GetAllCategories()
+                    .Where(x => x.Id == Convert.ToInt32(CatId))
+                     .Select(x => new
+                     {
+                         x.CactegoryName,
+                         x.Id
+                     }).ToList();
+
+                var products = _unitOfWork.SubCategory.GetAllSubCategories()
+                    .Where(x => x.CategoryRef == Convert.ToInt32(CatId))
+                    .Select(x => new
+                    {
+                        x.Id,
+                        x.SubCatImgUrl,
+                        x.Price,
+                        x.SubCactegoryName,
+                        x.Description,
+                        x.CategoryRef
+                    }).ToList();
+                return Json(new { products = products, categories = categories, filtered=true });
             }
             else
             {
-                var products = _unitOfWork.SubCategory.GetAllSubCategories();
-                AdminPanelViewModel model = new AdminPanelViewModel()
+                var categories = _unitOfWork.Category.GetAllCategories()
+                    .Select(x => new
+                    {
+                        x.CactegoryName,
+                        x.Id
+                    }).ToList();
+
+                var products = _unitOfWork.SubCategory.GetAllSubCategories().Select(x => new
                 {
-                    SubCategories = products,
-                };
-                return Json(model);
+                    x.Id,
+                    x.SubCatImgUrl,
+                    x.Price,
+                    x.SubCactegoryName,
+                    x.Description,
+                    x.CategoryRef
+                }).ToList();
+                return Json(new { products = products, categories = categories,filtered = false});
             }
 
         }

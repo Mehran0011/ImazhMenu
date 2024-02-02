@@ -252,20 +252,36 @@ function GetProductsByCategoryId(catId) {
             CategoryId: catId
         }
     }).done(function (response) {
+        console.log(response.products)
+        console.log(response.categories)
+
         var _html = "";
         var allhtml = "";
-        for (var i = 0; i < response.subCategories.length; i++) {
-            _html = `<div class="col-lg-6 menu-item filter-starters">` +
-                `<div class="row" style="margin-bottom:-30px;">` +
-                
-                `<div class="col-2"><img src="${response.subCategories[i].subCatImgUrl}" class="myImg" width="75px" height="75px" style="border-radius:50%;" /></div>` +
-                `<div class="col-3 col-lg-2 col-md-3 col-sm-3"><span style="margin-top:10px;color:#ffb03b;padding:15px;">${response.subCategories[i].subCactegoryName}</span></div>` +
-                `<div style="border-top: 1px dotted #000!important;margin-top: 21px;" class="col-4 col-lg-5 col-md-4 col-sm-4 "></div>` +
-                `<div class="col-3 col-md-3 d-flex justify-content-around text-center" style="margin-top:10px;"><span>${separate(response.subCategories[i].price)} تومان</span></div>` +
-                `</div>` +
-                `<p style="padding-right:100px;margin-bottom:30px;">${response.subCategories[i].description}</p>` +
-                `</div >`;
-            allhtml += _html;
+        for (var i = 0; i < response.categories.length; i++) {
+            if (response.filtered == true) {
+                allhtml = "";
+                allhtml += `<h4 class="p-4" style="color:#ffb03b;">${response.categories[i].cactegoryName}</h4>`;
+
+            } else {
+                allhtml += `<h4 class="p-4" style="color:#ffb03b;">${response.categories[i].cactegoryName}</h4>`;
+            }
+            for (var j = 0; j < response.products.length; j++) {
+                if (response.products[j].categoryRef == response.categories[i].id) {
+                    _html = `<div class="col-lg-6 col-sm-12 col-xs-12 menu-item filter-starters">` +
+                        `<div class="row" style="margin-bottom:-30px;">` +
+
+                        `<div class="col-lg-2 col-md-2 col-sm-2 col-2"><img src="${response.products[j].subCatImgUrl}" class="myImg" width="75px" height="75px" style="border-radius:50%;" /></div>` +
+                        `<div class="col-lg-3 col-md-3 col-sm-3 col-6 text-center" style="margin-top:10px;"><span class="text-center" style="color:#ffb03b;">${response.products[j].subCactegoryName}</span></div>` +
+                        `<div style="border-top: 1px dotted #000!important;margin-top: 21px;" class="col-lg-4 col-md-4 col-sm-3 col-2"></div>` +
+                        `<div class="col-lg-3 col-md-3 col-sm-4 col-2  d-flex justify-content-around text-center" style="margin-top:10px;">${separate(response.products[j].price)} تومان</div>` +
+                        `</div>` +
+                        `<p style="padding-right:100px;margin-bottom:30px;margin-top:30px;">${response.products[j].description}</p>` +
+                        `</div >`;
+                    allhtml += _html;
+                }
+
+            }
+
         }
 
         var _modal = `<div id="myModal" class="modal">` +
@@ -283,7 +299,7 @@ function GetProductsByCategoryId(catId) {
 // Get the image and insert it inside the modal - use its "alt" text as a caption
 var modalImg = document.getElementById("img01");
 $(".myImg").on('click', function () {
-    $("#myModal").css("display","block") 
+    $("#myModal").css("display", "block")
     $(".myImg").attr("src", this.src);
 });
 
