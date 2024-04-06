@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using NToastNotify;
 using NuGet.Protocol.Core.Types;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace ImazhMenu.Controllers
 {
@@ -180,6 +181,24 @@ namespace ImazhMenu.Controllers
             else
                 return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = _result });
 
+        }
+        public static string HashPassword(string password)
+        {
+            byte[] salt;
+            byte[] buffer2;
+            if (password == null)
+            {
+                throw new ArgumentNullException("password");
+            }
+            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
+            {
+                salt = bytes.Salt;
+                buffer2 = bytes.GetBytes(0x20);
+            }
+            byte[] dst = new byte[0x31];
+            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
+            Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
+            return Convert.ToBase64String(dst);
         }
         [Authorize]
         public IActionResult CreateNewCategory()
@@ -400,16 +419,32 @@ namespace ImazhMenu.Controllers
         [HttpPost]
         public IActionResult UpdateSubCategory(Subcategory Subcategory, IFormFile? file)
         {
+            var type = 1;
+            var oldImageUrl = _unitOfWork.SubCategory.GetAllSubCategories().Where(x => x.Id == Subcategory.Id).Select(x => x.SubCatImgUrl).FirstOrDefault();
+            if (file == null)
+            {
+                type = 2;
+            }
             if (Subcategory.SubCactegoryName != "" && Subcategory.CategoryRef != -1 && Subcategory.Price != 0)
             {
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                if (file != null)
+
+
+                if (type == 1)
                 {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+
                     string fileName = file.FileName;
                     var uploads = Path.Combine(wwwRootPath, @"Images\Products");
                     string extension = Path.GetExtension(file.FileName);
 
-                    if (file != null)
+                    if (file == null)
+                    {
+                        _toastNotification.AddWarningToastMessage("لطفا تصویر محصول را انتخاب کنید");
+                        _toastNotification.AddWarningToastMessage("در ویرایش محصول مشکلی پیش آمده است");
+                        return RedirectToAction("CreateNewSubCategory");
+
+                    }
+                    else
                     {
                         var oldImage = Path.Combine(uploads, fileName);
                         if (System.IO.File.Exists(oldImage))
@@ -430,19 +465,18 @@ namespace ImazhMenu.Controllers
                             Subcategory.SubCatImgUrl = @"Images/Products/" + fileName;
                         }
                     }
-                    _unitOfWork.SubCategory.UpdateSubCategory(Subcategory);
-                    _unitOfWork.Save();
-                    _toastNotification.AddSuccessToastMessage("محصول با موفقیت ویرایش شد");
+
+
                 }
                 else
                 {
-                    if (file == null)
-                    {
-                        _toastNotification.AddWarningToastMessage("لطفا تصویر محصول را انتخاب کنید");
-
-                    }
-                    _toastNotification.AddWarningToastMessage("در ویرایش محصول مشکلی پیش آمده است");
+                    Subcategory.SubCatImgUrl = oldImageUrl;
                 }
+                _unitOfWork.SubCategory.UpdateSubCategory(Subcategory);
+                _unitOfWork.Save();
+                _toastNotification.AddSuccessToastMessage("محصول با موفقیت ویرایش شد");
+
+
             }
             return RedirectToAction("CreateNewSubCategory");
 

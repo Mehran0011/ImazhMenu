@@ -267,10 +267,11 @@ function GetProductsByCategoryId(catId) {
             }
             for (var j = 0; j < response.products.length; j++) {
                 if (response.products[j].categoryRef == response.categories[i].id) {
+                    console.log(response.products[j]);
                     _html = `<div class="col-lg-6 col-sm-12 col-xs-12 menu-item filter-starters">` +
                         `<div class="row" style="margin-bottom:-30px;">` +
 
-                        `<div class="col-lg-2 col-md-2 col-sm-2 col-2"><img src="${response.products[j].subCatImgUrl}" class="myImg" width="75px" height="75px" style="border-radius:50%;" /></div>` +
+                        `<div class="col-lg-2 col-md-2 col-sm-2 col-2"><a href="${response.products[j].subCatImgUrl}" data-lightbox="image-${response.products[j].id}" data-title="${response.products[j].description}"><img src="${response.products[j].subCatImgUrl}" class="myImg" width="75px" height="75px" style="border-radius:50%;" /></a></div>` +
                         `<div class="col-lg-3 col-md-3 col-sm-3 col-6 text-center" style="margin-top:10px;"><span class="text-center" style="color:#ffb03b;">${response.products[j].subCactegoryName}</span></div>` +
                         `<div style="border-top: 1px dotted #000!important;margin-top: 21px;" class="col-lg-4 col-md-4 col-sm-3 col-2"></div>` +
                         `<div class="col-lg-3 col-md-3 col-sm-4 col-2  d-flex justify-content-around text-center" style="margin-top:10px;">${separate(response.products[j].price)} تومان</div>` +
