@@ -8,7 +8,7 @@ namespace ImazhMenu.Repository.IRepository
         IQueryable<Gallery> GetAllGalleryPictures();
         void AddGalleryPicture(Gallery category);
         void UpdateGalleryPicture(Gallery category);
-        void DeleteGalleryPicture(Gallery category);
+        void DeleteGalleryPicture(Gallery category,string wwwrootpath);
 
     }
 }

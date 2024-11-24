@@ -20,8 +20,13 @@ namespace ImazhMenu.Repository
 			_db.Add(subcategory);
 		}
 
-		public void DeleteSubCategory(Subcategory subcategory)
+		public void DeleteSubCategory(Subcategory subcategory,string wwwrootpath)
 		{
+			var fileName = wwwrootpath+"\\"+ subcategory.SubCatImgUrl.Replace("/", "\\");
+			if (System.IO.File.Exists(fileName))
+			{
+				System.IO.File.Delete(fileName);
+			}
 			_db.Remove(subcategory);
 		}
 

@@ -6,33 +6,37 @@ using System.Linq.Expressions;
 
 namespace ImazhMenu.Repository
 {
-	public class GalleryRepository : IGalleryRepository
-	{
-		private readonly ApplicationDbContext _db;
+    public class GalleryRepository : IGalleryRepository
+    {
+        private readonly ApplicationDbContext _db;
 
-		public GalleryRepository(ApplicationDbContext db)
-		{
-			_db = db;
-		}
+        public GalleryRepository(ApplicationDbContext db)
+        {
+            _db = db;
+        }
 
-		public void AddGalleryPicture(Gallery gallery)
-		{
-			_db.Add(gallery);
-		}
+        public void AddGalleryPicture(Gallery gallery)
+        {
+            _db.Add(gallery);
+        }
 
-		public void DeleteGalleryPicture(Gallery gallery)
-		{
-			_db.Remove(gallery);
-		}
+        public void DeleteGalleryPicture(Gallery gallery, string wwwrootpath)
+        {
+            var fileName = wwwrootpath + "\\" + gallery.ImgUrl.Replace("/", "\\");
+            if (System.IO.File.Exists(fileName))
+            {
+                System.IO.File.Delete(fileName);
+            }
+            _db.Remove(gallery);
+        }
+        public IQueryable<Gallery> GetAllGalleryPictures()
+        {
+            return _db.Galleries.AsQueryable();
+        }
 
-		public IQueryable<Gallery> GetAllGalleryPictures()
-		{
-			return _db.Galleries.AsQueryable();
-		}
-
-		public void UpdateGalleryPicture(Gallery gallery)
-		{
-			_db.Update(gallery);
-		}
-	}
+        public void UpdateGalleryPicture(Gallery gallery)
+        {
+            _db.Update(gallery);
+        }
+    }
 }

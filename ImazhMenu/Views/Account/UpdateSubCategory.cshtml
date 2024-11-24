@@ -1,7 +1,26 @@
 ﻿@model Subcategory
 @{
-    Layout = "_AdminPanelLayout";
+    Layout = "_DashboardLayout";
 }
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">پنل مدیریت حاصل</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-left">
+              <li class="breadcrumb-item"><a href="#">خانه</a></li>
+              <li class="breadcrumb-item active">پنل مدیریت حاصل</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
 
 <div id="SubCategorySection">
     <div class="m-5">
@@ -34,6 +53,13 @@
                         </div> 
                         <div class="form-group col-6 mb-3 text-center">
                             <img src="/@Model.SubCatImgUrl" height="250px" width="250px" />
+                        </div>
+                    </div>
+                    <!-- Checkbox for IsActive -->
+                    <div class="form-group mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" asp-for="IsActive" id="isActiveCheckbox" />
+                            <label class="form-check-label" for="isActiveCheckbox">فعال شود</label>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary mx-3">ثبت</button>

@@ -10,6 +10,7 @@ namespace ImazhMenu.Models
         public string SubCatImgUrl { get; set; }
         public int Price { get; set; }
         public int CategoryRef { get; set; }
+        public bool IsActive { get; set; }
         [ForeignKey("CategoryRef")]
         public Category Category { get; set; }
     }

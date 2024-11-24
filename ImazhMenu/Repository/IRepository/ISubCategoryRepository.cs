@@ -8,7 +8,7 @@ namespace ImazhMenu.Repository.IRepository
         IQueryable<Subcategory> GetAllSubCategories();
         void AddSubCategory(Subcategory subcategory);
         void UpdateSubCategory(Subcategory subcategory);
-        void DeleteSubCategory(Subcategory subcategory);
+        void DeleteSubCategory(Subcategory subcategory,string wwwrootpath);
 
     }
 }

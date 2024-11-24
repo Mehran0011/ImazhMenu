@@ -47,6 +47,12 @@ namespace ImazhMenu.Controllers
             return View();
         }
         [HttpPost]
+        public JsonResult GetAllDrpCategories()
+        {
+            var categories = _unitOfWork.Category.GetAllCategories().ToList();
+            return Json(categories);
+        }
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -264,73 +270,50 @@ namespace ImazhMenu.Controllers
         //=====================================================================================
         [Authorize]
         [HttpPost]
-        public virtual async Task<JsonResult> GetAllSubCategories()
+        public virtual async Task<JsonResult> GetAllSubCategories(int? categoryId)
         {
-
             var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+            var start = HttpContext.Request.Form["start"].FirstOrDefault();
+            var length = HttpContext.Request.Form["length"].FirstOrDefault();
+            var searchValue = HttpContext.Request.Form["search[value]"].FirstOrDefault();
 
-            // Skip number of Rows count  
-            var start = Request.Form["start"].FirstOrDefault();
-
-            // Paging Length 10,20  
-            var length = Request.Form["length"].FirstOrDefault();
-
-            // Sort Column Name  
-            var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-
-            // Sort Column Direction (asc, desc)  
-            var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-
-            // Search Value from (Search box)  
-            var searchValue = Request.Form["search[value]"].FirstOrDefault();
-
-            //Paging Size (10, 20, 50,100)  
             int pageSize = length != null ? Convert.ToInt32(length) : 0;
-
             int skip = start != null ? Convert.ToInt32(start) : 0;
 
-            int recordsTotal = 0;
-
-
             IQueryable<Subcategory> _result = _unitOfWork.SubCategory.GetAllSubCategories();
-            if (_result != null)
+
+            // Apply Category Filter
+            if (categoryId.HasValue && categoryId != -1)
             {
-                if (!string.IsNullOrEmpty(searchValue) && !string.IsNullOrWhiteSpace(searchValue))
-                {
-                    // Apply search    
-                    _result = _result.Where(p => p.SubCactegoryName.ToLower().Contains(searchValue.ToLower()));
-
-                }
-
-
-                var _resultfinal = _result
-                        .Select(x => new
-                        {
-                            id = x.Id,
-                            subCategoryName = x.SubCactegoryName,
-                            price = x.Price,
-                            subCatImage = x.SubCatImgUrl,
-                            subCatDesc = x.Description
-                        });
-
-                //Sorting  datatable
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
-                {
-                    //_resultfinal = _resultfinal.OrderBy(sortColumn + " " + sortColumnDirection);
-                }
-                //total number of rows counts   
-                recordsTotal = _resultfinal.Count();
-                //Paging   
-                var data = _resultfinal.OrderByDescending(x => x.subCategoryName).Skip(skip).Take(pageSize).ToList();
-
-                //Returning Json Data  
-                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
-
+                _result = _result.Where(x => x.CategoryRef == categoryId.Value);
             }
-            else
-                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = _result });
 
+            // Apply Search
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                _result = _result.Where(p => p.SubCactegoryName.ToLower().Contains(searchValue.ToLower()));
+            }
+
+            var _resultfinal = _result.Select(x => new
+            {
+                id = x.Id,
+                subCategoryName = x.SubCactegoryName,
+                price = x.Price,
+                subCatImage = x.SubCatImgUrl,
+                subCatDesc = x.Description,
+                isActive = x.IsActive
+            });
+
+            // Total Count
+            int recordsTotal = _resultfinal.Count();
+
+            // Pagination
+            var data = _resultfinal.OrderByDescending(x => x.subCategoryName).Skip(skip).Take(pageSize).ToList();
+
+            // Return JSON
+            return Json(new { draw, recordsFiltered = recordsTotal, recordsTotal, data });
         }
+
         [Authorize]
         public IActionResult CreateNewSubCategory()
         {
@@ -351,21 +334,13 @@ namespace ImazhMenu.Controllers
                 Categories = Categories
             };
 
-            Category Category = _unitOfWork.Category.GetAllCategories().Where(x => x.Id == categoryId).FirstOrDefault();
-            model.CategoryRef = categoryId;
-            model.Categories = Categories;
-            if (Category == null)
-            {
-                _toastNotification.AddErrorToastMessage("دسته بندی را انتخاب کنید !");
-                return View(model);
-            }
             Subcategory _subcat = new Subcategory()
             {
                 SubCactegoryName = model.SubCactegoryName,
-                CategoryRef = model.CategoryRef,
-                Category = Category,
+                CategoryRef = categoryId,
                 Description = model.Description == null ? "" : model.Description,
-                Price = model.Price
+                Price = model.Price,
+                IsActive=model.IsActive
             };
             if (model.SubCactegoryName != "" && model.CategoryRef != -1 && model.Price != 0)
             {
@@ -395,17 +370,19 @@ namespace ImazhMenu.Controllers
                         }
                         _subcat.SubCatImgUrl = @"Images/Products/" + fileName;
                     }
-
-
-                }
-                else
-                {
-                    _subcat.SubCatImgUrl = "";
                     _unitOfWork.SubCategory.AddSubCategory(_subcat);
                     _unitOfWork.Save();
                     _toastNotification.AddSuccessToastMessage("محصول با موفقیت افزوده شد");
+                    ModelState.Clear();
+                    return View();
+
+                }
+                else if (file == null)
+                {
+                    _toastNotification.AddErrorToastMessage("تصویر را اضافه کنید !");
                     return View(model);
                 }
+
             }
             return View(catmodel);
         }
@@ -485,6 +462,7 @@ namespace ImazhMenu.Controllers
         [HttpDelete]
         public IActionResult DeleteSubCategory(int? id)
         {
+            string wwwRootPath = _hostEnvironment.WebRootPath;
             var obj = _unitOfWork.SubCategory.GetAllSubCategories().Where(u => u.Id == id).FirstOrDefault();
             if (obj == null)
             {
@@ -492,7 +470,7 @@ namespace ImazhMenu.Controllers
             }
             else
             {
-                _unitOfWork.SubCategory.DeleteSubCategory(obj);
+                _unitOfWork.SubCategory.DeleteSubCategory(obj, wwwRootPath);
                 _unitOfWork.Save();
                 _toastNotification.AddSuccessToastMessage("محصول با موفقیت حذف شد");
             }
@@ -687,6 +665,7 @@ namespace ImazhMenu.Controllers
         [HttpDelete]
         public IActionResult DeleteGalleryPicture(int? id)
         {
+            string wwwRootPath = _hostEnvironment.WebRootPath;
             var obj = _unitOfWork.Gallery.GetAllGalleryPictures().Where(u => u.Id == id).FirstOrDefault();
             if (obj == null)
             {
@@ -694,7 +673,7 @@ namespace ImazhMenu.Controllers
             }
             else
             {
-                _unitOfWork.Gallery.DeleteGalleryPicture(obj);
+                _unitOfWork.Gallery.DeleteGalleryPicture(obj, wwwRootPath);
                 _unitOfWork.Save();
                 _toastNotification.AddSuccessToastMessage("تصویر گالری با موفقیت حذف شد");
             }
@@ -792,6 +771,36 @@ namespace ImazhMenu.Controllers
 
             return Json(new { success = true, message = "Deleted Successfully!" });
         }
+        
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ToggleProductStatus(int id, bool isActive)
+        {
+            try
+            {
+                // پیدا کردن محصول با استفاده از شناسه
+                var product = _unitOfWork.SubCategory.GetAllSubCategories().FirstOrDefault(x=>x.Id==id);
+                if (product == null)
+                {
+                    return Json(new { success = false, message = "محصول یافت نشد" });
+                }
+
+                // تغییر وضعیت محصول
+                product.IsActive = isActive;
+
+                // ذخیره تغییرات در دیتابیس
+                _unitOfWork.SubCategory.UpdateSubCategory(product);
+                 _unitOfWork.Save();
+
+                return Json(new { success = true, message = "وضعیت محصول با موفقیت تغییر کرد" });
+            }
+            catch (Exception ex)
+            {
+                // مدیریت خطا
+                return Json(new { success = false, message = "خطا در تغییر وضعیت محصول", error = ex.Message });
+            }
+        }
+
     }
 }
 

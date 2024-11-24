@@ -26,7 +26,7 @@ namespace ImazhMenu.Controllers
         public IActionResult Index()
         {
             var categories = _unitOfWork.Category.GetAllCategories();
-            var products = _unitOfWork.SubCategory.GetAllSubCategories();
+            var products = _unitOfWork.SubCategory.GetAllSubCategories().Where(x=>x.IsActive==true).ToList();
             var gallerry = _unitOfWork.Gallery.GetAllGalleryPictures();
             AdminPanelViewModel model = new AdminPanelViewModel()
             {
@@ -60,7 +60,8 @@ namespace ImazhMenu.Controllers
                         x.Price,
                         x.SubCactegoryName,
                         x.Description,
-                        x.CategoryRef
+                        x.CategoryRef,
+                        x.IsActive
                     }).ToList();
                 return Json(new { products = products, categories = categories, filtered=true });
             }
@@ -80,7 +81,8 @@ namespace ImazhMenu.Controllers
                     x.Price,
                     x.SubCactegoryName,
                     x.Description,
-                    x.CategoryRef
+                    x.CategoryRef,
+                    x.IsActive
                 }).ToList();
                 return Json(new { products = products, categories = categories,filtered = false});
             }

@@ -44,6 +44,20 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapGet("/dashboard", async context =>
+{
+    //if (!context.User.Identity.IsAuthenticated)
+    //{
+    //    context.Response.Redirect("/Identity/Account/Login");
+    //}
+    //else
+    //{
+    context.Response.Redirect("/Identity/Account/Dashboard");
+    //}
+
+    await Task.CompletedTask;
+});
+
 app.MapRazorPages();
 
 

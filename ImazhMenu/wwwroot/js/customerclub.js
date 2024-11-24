@@ -56,7 +56,7 @@ function loadDataTable() {
                 "data": "id",
                 "render": function (data) {
                     return `
-                            <div class="w-75 btn-group" role="group">
+                            <div class="w-75 btn-group" role="group"  style="justify-content: center;color: white;">
                             <a onclick=Delete('/Account/DeleteCustomerClub/${data}') class="btn btn-danger mx-2">
                                 <i class="bi bi-trash-fill">حذف</i>
                             </a>

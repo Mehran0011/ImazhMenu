@@ -18,6 +18,7 @@ namespace ImazhMenu.ViewModels.Account
         [Required(ErrorMessage = "لطفا قیمت محصول را وارد کنید")]
         public int Price { get; set; }
         public int CategoryRef { get; set; }
+        public bool IsActive { get; set; }
         public IEnumerable<Category> Categories{ get; set; }
         public IEnumerable<Subcategory> SubCategories { get; set; }
         public IEnumerable<Gallery> Gallery { get; set; }
