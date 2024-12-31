@@ -275,15 +275,28 @@ function GetProductsByCategoryId(catId) {
                         : `<span>ناموجود</span>`;
 
                     _html = `<div class="col-lg-6 col-sm-12 col-xs-12 menu-item filter-starters">` +
-                        `<div class="row" style="margin-bottom:-30px;">` +
+                        `<div class="d-flex align-items-center justify-content-between flex-nowrap" style="gap: 10px; overflow-x: auto; padding: 10px 0;">` +
 
-                        `<div class="col-lg-2 col-md-2 col-sm-2 col-2"><a href="${response.products[j].subCatImgUrl}" data-lightbox="image-${response.products[j].id}" data-title="${response.products[j].description}"><img src="${response.products[j].subCatImgUrl}" class="myImg" width="75px" height="75px" style="border-radius:50%;" /></a></div>` +
-                        `<div class="col-lg-3 col-md-3 col-sm-3 col-6 text-center" style="margin-top:10px;"><span class="text-center" style="color:#ffb03b;">${response.products[j].subCactegoryName}</span></div>` +
-                        `<div style="border-top: 1px dotted #000!important;margin-top: 21px;" class="col-lg-4 col-md-4 col-sm-3 col-2"></div>` +
-                        `<div class="col-lg-3 col-md-3 col-sm-4 col-2  d-flex justify-content-around text-center" style="margin-top:10px;">${priceHtml}</div>` +
+                        // تصویر
+                        `<div style="flex: 0 0 auto;">` +
+                        `<a href="${response.products[j].subCatImgUrl}" data-lightbox="image-${response.products[j].id}" data-title="${response.products[j].description}">` +
+                        `<img src="${response.products[j].subCatImgUrl}" class="myImg" width="60" height="60" style="border-radius:50%;" />` +
+                        `</a>` +
                         `</div>` +
-                        `<p style="padding-right:100px;margin-bottom:30px;margin-top:30px;">${response.products[j].description}</p>` +
-                        `</div >`;
+
+                        // عنوان + خط + قیمت
+                        `<div class="d-flex align-items-center flex-nowrap" style="flex: 1; min-width: 0;">` +
+                        `<div style="white-space: nowrap; color: #ffb03b; flex-shrink: 0;">${response.products[j].subCactegoryName}</div>` +
+                        `<div style="flex-grow: 1; height: 1px; border-top: 1px dotted #000; margin: 0 10px;"></div>` +
+                        `<div style="white-space: nowrap; flex-shrink: 0; font-size: 14px;">${priceHtml}</div>` +
+                        `</div>` +
+
+                        `</div>` +
+
+                        // توضیحات
+                        `<p style="padding-right:100px;margin-bottom:30px;margin-top:10px;">${response.products[j].description}</p>` +
+                        `</div>`;
+
                     allhtml += _html;
                 }
 
