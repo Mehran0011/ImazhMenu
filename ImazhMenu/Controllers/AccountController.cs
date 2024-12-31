@@ -396,68 +396,54 @@ namespace ImazhMenu.Controllers
         [HttpPost]
         public IActionResult UpdateSubCategory(Subcategory Subcategory, IFormFile? file)
         {
-            var type = 1;
-            var oldImageUrl = _unitOfWork.SubCategory.GetAllSubCategories().Where(x => x.Id == Subcategory.Id).Select(x => x.SubCatImgUrl).FirstOrDefault();
+            var oldImageUrl = _unitOfWork.SubCategory.GetAllSubCategories()
+                                .Where(x => x.Id == Subcategory.Id)
+                                .Select(x => x.SubCatImgUrl)
+                                .FirstOrDefault();
+
+            // اگر تصویر جدیدی انتخاب نشده بود، از تصویر قبلی استفاده می‌کنیم
             if (file == null)
             {
-                type = 2;
+                Subcategory.SubCatImgUrl = oldImageUrl;
             }
+            else
+            {
+                // اگر تصویر جدیدی انتخاب شد، ابتدا فایل قبلی حذف می‌شود
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string fileName = file.FileName;
+                var uploads = Path.Combine(wwwRootPath, @"Images\Products");
+                string extension = Path.GetExtension(file.FileName);
+
+                // حذف فایل قدیمی
+                var oldImage = Path.Combine(uploads, Path.GetFileName(oldImageUrl));
+                if (System.IO.File.Exists(oldImage))
+                {
+                    System.IO.File.Delete(oldImage);
+                }
+
+                // ذخیره فایل جدید
+                using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
+                {
+                    file.CopyTo(fileStreams);
+                }
+                Subcategory.SubCatImgUrl = @"Images/Products/" + fileName;
+            }
+
+            // بررسی صحت دیگر فیلدها
             if (Subcategory.SubCactegoryName != "" && Subcategory.CategoryRef != -1 && Subcategory.Price != 0)
             {
-
-
-                if (type == 1)
-                {
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-
-                    string fileName = file.FileName;
-                    var uploads = Path.Combine(wwwRootPath, @"Images\Products");
-                    string extension = Path.GetExtension(file.FileName);
-
-                    if (file == null)
-                    {
-                        _toastNotification.AddWarningToastMessage("لطفا تصویر محصول را انتخاب کنید");
-                        _toastNotification.AddWarningToastMessage("در ویرایش محصول مشکلی پیش آمده است");
-                        return RedirectToAction("CreateNewSubCategory");
-
-                    }
-                    else
-                    {
-                        var oldImage = Path.Combine(uploads, fileName);
-                        if (System.IO.File.Exists(oldImage))
-                        {
-                            System.IO.File.Delete(oldImage);
-                            using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
-                            {
-                                file.CopyTo(fileStreams);
-                            }
-                            Subcategory.SubCatImgUrl = @"Images/Products/" + fileName;
-                        }
-                        else
-                        {
-                            using (var fileStreams = new FileStream(Path.Combine(uploads, fileName), FileMode.Create))
-                            {
-                                file.CopyTo(fileStreams);
-                            }
-                            Subcategory.SubCatImgUrl = @"Images/Products/" + fileName;
-                        }
-                    }
-
-
-                }
-                else
-                {
-                    Subcategory.SubCatImgUrl = oldImageUrl;
-                }
                 _unitOfWork.SubCategory.UpdateSubCategory(Subcategory);
                 _unitOfWork.Save();
                 _toastNotification.AddSuccessToastMessage("محصول با موفقیت ویرایش شد");
-
-
             }
-            return RedirectToAction("CreateNewSubCategory");
+            else
+            {
+                _toastNotification.AddWarningToastMessage("لطفا اطلاعات را به درستی وارد کنید.");
+            }
 
+            return RedirectToAction("CreateNewSubCategory");
         }
+
         [Authorize]
         [HttpDelete]
         public IActionResult DeleteSubCategory(int? id)
