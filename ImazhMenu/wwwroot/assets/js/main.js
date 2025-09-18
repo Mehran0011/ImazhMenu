@@ -1,7 +1,10 @@
 ﻿$(document).ready(function () {
-    if ($("#allCategory").hasClass("filter-active")) {
+    //if ($("#allCategory").hasClass("filter-active")) {
+    //    GetProductsByCategoryId(-1);
+    //}
+    $(window).on("load", function () {
         GetProductsByCategoryId(-1);
-    }
+    });
 });
 
 function separate(Number) {
@@ -246,15 +249,13 @@ function separate(Number) {
 //=================================================================
 function GetProductsByCategoryId(catId) {
     $.ajax({
-        method: "Post",
+        type: "POST",
         url: "/Home/GetProductsByCategoryId",
-        data: {
-            CategoryId: catId
+        data: JSON.stringify({ CategoryId: catId }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
         }
     }).done(function (response) {
-        console.log(response.products)
-        console.log(response.categories)
-
         var _html = "";
         var allhtml = "";
         for (var i = 0; i < response.categories.length; i++) {
@@ -267,8 +268,6 @@ function GetProductsByCategoryId(catId) {
             }
             for (var j = 0; j < response.products.length; j++) {
                 if (response.products[j].categoryRef == response.categories[i].id) {
-                    console.log(response.products[j]);
-
                     // بررسی فعال یا غیرفعال بودن محصول
                     let priceHtml = response.products[j].isActive
                         ? `${separate(response.products[j].price)} تومان`
